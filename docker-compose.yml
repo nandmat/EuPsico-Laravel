@@ -2,7 +2,7 @@ version: '3'
 
 services:
   php:
-    container_name: pwr-php
+    container_name: app-php
     build:
       context: ./docker/php
       dockerfile: Dockerfile
@@ -12,10 +12,10 @@ services:
       - ./:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - pwr-network
+      - app-network
 
   nginx:
-    container_name: pwr-nginx
+    container_name: app-nginx
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
@@ -28,10 +28,10 @@ services:
       - ./:/var/www
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
-      - pwr-network
+      - app-network
 
   node:
-    container_name: pwr-node
+    container_name: app-node
     build:
       context: ./docker/node
       dockerfile: Dockerfile.node
@@ -40,19 +40,19 @@ services:
     volumes:
       - ./:/var/www
     networks:
-      - pwr-network
+      - app-network
 
   mysql:
-    container_name: pwr-mysql
+    container_name: app-mysql
     image: mysql:8.2.0
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     tty: true
     volumes:
-      - pwr-data:/var/lib/mysql/
+      - app-data:/var/lib/mysql/
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
-      - pwr-network
+      - app-network
     ports:
       - '3306:3306'
     environment:
@@ -62,20 +62,20 @@ services:
       MYSQL_PASSWORD: password
 
   phpmyadmin:
-    container_name: pwr-phpmyadmin
+    container_name: app-phpmyadmin
     image: phpmyadmin:5.2
     restart: always
     ports:
       - '8888:80'
     networks:
-      - pwr-network
+      - app-network
     environment:
-      PMA_HOST: pwr-mysql
+      PMA_HOST: app-mysql
     depends_on:
       - mysql
 
   redis:
-    container_name: pwr-redis
+    container_name: app-redis
     build:
       context: ./docker/redis
       dockerfile: Dockerfile
@@ -83,9 +83,9 @@ services:
       - '6379:6379'
 
 networks:
-  pwr-network:
+  app-network:
     driver: bridge
 
 volumes:
-  pwr-data:
+  app-data:
     driver: local
