@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PsicologoController;
+use App\Http\Controllers\PsychologistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +18,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/', [HomeController::class, 'index'])->name("home.index");
+
+//Auth\Register Routes
+
+Route::get('/login', [AuthController::class, 'index'])->name('login.index');
+Route::post("/login", [AuthController::class, "auth"])->name("login.auth");
+Route::get('/logout', [AuthController::class, "logout"])->name('logout');
+
+Route::get('/cadastrar_psicologo', [PsychologistController::class, "create"])->name("cadastrar.psicologo.index");
+Route::get('/cadastrar_paciente', [AuthController::class, "cadastrarPacienteView"])->name("cadastrar.paciente.index");
+Route::post('/store/patient', [PatientController::class, 'store'])->name('store.patient');
+
+
+Route::middleware('auth')->group(function(){
+    Route::prefix('/pyschologist')->group(function(){
+        Route::get('/index', [PsychologistController::class, 'index'])->name('pyschologist.index');
+    });
 });

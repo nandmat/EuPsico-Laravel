@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Patient;
+use App\Models\Psychologist;
 
 class User extends Authenticatable
 {
@@ -16,11 +18,17 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     *
      */
+
+    protected $table = "users";
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'status',
+        'role',
     ];
 
     /**
@@ -42,4 +50,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
+    }
+
+    public function psycologist()
+    {
+        return $this->hasOne(Psychologist::class);
+    }
 }
