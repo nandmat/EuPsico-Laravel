@@ -114,6 +114,7 @@
 
             <!-- Botão fechar -->
             <!--
+
             <div class="modal_footer">
                 <a href="#" class="modal_footer_btn_close"> Fechar </a>
             </div> -->
